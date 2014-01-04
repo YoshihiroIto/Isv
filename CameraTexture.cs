@@ -18,7 +18,9 @@ using OpenTK;
 
 namespace Isv
 {
-	internal class CameraTexture : Java.Lang.Object, IDisposable, SurfaceTexture.IOnFrameAvailableListener
+	internal class CameraTexture : Java.Lang.Object,
+	IDisposable,
+	SurfaceTexture.IOnFrameAvailableListener
 	{
 		private int[] _textures = new int[1];
 		private SurfaceTexture _surfaceTexture;
@@ -43,7 +45,6 @@ namespace Isv
 			_camera = Android.Hardware.Camera.Open ();
 
 			_camera.StopFaceDetection ();
-			//_camera.StopSmoothZoom ();
 
 			var param = _camera.GetParameters ();
 
@@ -69,8 +70,10 @@ namespace Isv
 			}
 			#endif
 
-			_camera.SetParameters (param);
+			// オートフォーカス
+			param.FocusMode = Android.Hardware.Camera.Parameters.FocusModeContinuousVideo;
 
+			_camera.SetParameters (param);
 			_camera.SetPreviewTexture (_surfaceTexture);
 			_camera.StartPreview ();
 		}
@@ -89,7 +92,7 @@ namespace Isv
 			if (PreviewFrame != null)
 				PreviewFrame (this, EventArgs.Empty);
 		}
-
+			
 		public void UpdateTexImage()
 		{
 			_surfaceTexture.UpdateTexImage ();
