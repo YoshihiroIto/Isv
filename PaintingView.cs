@@ -124,12 +124,12 @@ namespace Isv {
 			RenderTriangle ();
 		}
 
-		void RenderTriangle ()
+		private unsafe void RenderTriangle ()
 		{
 			vertices = new float [] {
-					0.0f, 0.5f, 0.0f,
-					-0.5f, -0.5f, 0.0f,
-					0.5f, -0.5f, 0.0f
+				0.0f,  0.5f, 0.0f, 0.0f,  0.5f,
+				-0.5f, -0.5f, 0.0f, 0.0f, 1.0f,
+				0.5f, -0.5f, 0.0f, 1.0f, 1.0f,
 				};
 
 			GL.ClearColor (0.7f, 0.7f, 0.7f, 1);
@@ -139,8 +139,14 @@ namespace Isv {
 
 			_simple.Use ();
 
-			GL.VertexAttribPointer (0, 3, All.Float, false, 0, vertices);
-			GL.EnableVertexAttribArray (0);
+			GL.VertexAttribPointer (ShaderProgram.AttrPosition, 3, All.Float, false, sizeof(float)*5, vertices);
+			GL.EnableVertexAttribArray (ShaderProgram.AttrPosition);
+
+			fixed(float *texCoordHead = &vertices[2])
+			{
+				GL.VertexAttribPointer (ShaderProgram.AttrTexcoord, 2, All.Float, false, sizeof(float) * 5, texCoordHead);
+				GL.EnableVertexAttribArray (ShaderProgram.AttrTexcoord);
+			}
 
 			GL.DrawArrays (All.Triangles, 0, 3);
 

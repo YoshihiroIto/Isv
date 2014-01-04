@@ -22,6 +22,9 @@ namespace Isv
         private int _vsh;
         private int _fsh;
 
+        public const int AttrPosition = 0;
+        public const int AttrTexcoord = 1;
+
 		public ShaderProgram(AssetManager assetMan, string vshPath, string fshPath)
         {
             _program = GL.CreateProgram();
@@ -35,7 +38,8 @@ namespace Isv
 			GL.AttachShader(_program, _vsh);
 			GL.AttachShader(_program, _fsh);
 
-			GL.BindAttribLocation (_program, 0, "position");
+			GL.BindAttribLocation (_program, AttrPosition, "inPosition");
+			GL.BindAttribLocation (_program, AttrTexcoord, "inTexcoord");
 			GL.LinkProgram (_program);
 
 			int linked;

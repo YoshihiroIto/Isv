@@ -1,8 +1,10 @@
 #version 300 es
 
-out lowp vec4 fragColor;
+in highp vec2 texcoord;
+
+out lowp vec4 outFragColor;
 
 void main()            
 {
-   fragColor = vec4 (0.0, 0.0, 1.0, 1.0);
+   outFragColor = vec4 (0.0, 0.0, 1.0, 1.0);
 }     
