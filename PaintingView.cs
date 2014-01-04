@@ -8,6 +8,7 @@ using OpenTK.Platform.Android;
 using Android.Util;
 using Android.Views;
 using Android.Content;
+using Android.Opengl;
 
 namespace Isv
 {
@@ -17,6 +18,8 @@ namespace Isv
 		float[] vertices;
 		private ShaderProgram _simple;
 		private CameraTexture _cameraTex;
+
+		private float[] _texTransform = new float[16]; 
 
 		public PaintingView (Context context, IAttributeSet attrs) :
 			base (context, attrs)
@@ -122,6 +125,10 @@ namespace Isv
 			{
 				MakeCurrent ();
 				_cameraTex.UpdateTexImage();
+				_cameraTex.GetTransformMatrix(_texTransform);
+
+				GL.UniformMatrix4(_simple.UniformTexTransform, 1, false, _texTransform);
+
 				RenderTriangle ();
 			};
 
@@ -130,14 +137,12 @@ namespace Isv
 
 		private unsafe void RenderTriangle ()
 		{
-			var scale = 1.0f;
-
 			vertices = new [] {
-				-1.0f*scale, +1.0f*scale, 0.0f, 0.0f, 0.0f,
-				+1.0f*scale, +1.0f*scale, 0.0f, 1.0f, 0.0f,
+				-1.0f, +1.0f, 0.0f, 0.0f, 1.0f,
+				+1.0f, +1.0f, 0.0f, 1.0f, 1.0f,
 
-				-1.0f*scale, -1.0f*scale, 0.0f, 0.0f, 1.0f,
-				+1.0f*scale, -1.0f*scale, 0.0f, 1.0f, 1.0f,
+				-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+				+1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
 			};
 
 			GL.ClearColor (1.0f, 0.0f, 0.0f, 1);
@@ -151,12 +156,12 @@ namespace Isv
 			GL.ActiveTexture (All.Texture0);
 			GL.BindTexture (tex, _cameraTex.TextureName);
 
-			GL.VertexAttribPointer (ShaderProgram.AttrPosition, 3, All.Float, false, sizeof(float) * 5, vertices);
-			GL.EnableVertexAttribArray (ShaderProgram.AttrPosition);
+			GL.VertexAttribPointer (ShaderProgram.AttribPosition, 3, All.Float, false, sizeof(float) * 5, vertices);
+			GL.EnableVertexAttribArray (ShaderProgram.AttribPosition);
 
 			fixed(float *texCoordHead = &vertices[3]) {
-				GL.VertexAttribPointer (ShaderProgram.AttrTexcoord, 2, All.Float, false, sizeof(float) * 5, new IntPtr (texCoordHead));
-				GL.EnableVertexAttribArray (ShaderProgram.AttrTexcoord);
+				GL.VertexAttribPointer (ShaderProgram.AttribTexcoord, 2, All.Float, false, sizeof(float) * 5, new IntPtr (texCoordHead));
+				GL.EnableVertexAttribArray (ShaderProgram.AttribTexcoord);
 			}
 
 			GL.DrawArrays (All.TriangleStrip, 0, 4);

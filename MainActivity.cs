@@ -20,6 +20,8 @@ namespace Isv
 		{
 			base.OnCreate (savedInstanceState);
 
+			RequestWindowFeature (WindowFeatures.NoTitle);
+
 			// Inflate our UI from its XML layout description
 			// - should match filename res/layout/main.xml ?
 			SetContentView (Resource.Layout.main);

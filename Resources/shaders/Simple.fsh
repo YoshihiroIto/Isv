@@ -1,7 +1,7 @@
 #version 300 es
 #extension GL_OES_EGL_image_external : require
 
-in highp vec2 texcoord;
+in lowp vec2 texcoord;
 
 out lowp vec4 outFragColor;
 

@@ -22,8 +22,13 @@ namespace Isv
         private int _vsh;
         private int _fsh;
 
-        public const int AttrPosition = 0;
-        public const int AttrTexcoord = 1;
+        public const int AttribPosition = 0;
+        public const int AttribTexcoord = 1;
+
+		public int UniformTexTransform {
+			get;
+			private set;
+		}
 
 		public ShaderProgram(AssetManager assetMan, string vshPath, string fshPath)
         {
@@ -38,9 +43,11 @@ namespace Isv
 			GL.AttachShader(_program, _vsh);
 			GL.AttachShader(_program, _fsh);
 
-			GL.BindAttribLocation (_program, AttrPosition, "inPosition");
-			GL.BindAttribLocation (_program, AttrTexcoord, "inTexcoord");
+			GL.BindAttribLocation (_program, AttribPosition, "inPosition");
+			GL.BindAttribLocation (_program, AttribTexcoord, "inTexcoord");
 			GL.LinkProgram (_program);
+
+			UniformTexTransform = GL.GetUniformLocation(_program, new StringBuilder("texTransform"));
 
 			int linked;
 			GL.GetProgram (_program, All.LinkStatus, out linked);

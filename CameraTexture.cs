@@ -41,6 +41,36 @@ namespace Isv
 			_surfaceTexture.SetOnFrameAvailableListener (this);
 
 			_camera = Android.Hardware.Camera.Open ();
+
+			_camera.StopFaceDetection ();
+			//_camera.StopSmoothZoom ();
+
+			var param = _camera.GetParameters ();
+
+			// FPS
+			{
+				#if false
+				var range = param.SupportedPreviewFpsRange.LastOrDefault ();
+
+				if (range != null)
+					param.SetPreviewFpsRange (range [0], range [1]);
+				#endif
+
+				param.PreviewFrameRate = param.SupportedPreviewFrameRates.Last().IntValue();
+			}
+
+			#if false
+			// サイズ
+			{
+				var a = param.SupportedPictureSizes.ToList();
+				var b = param.SupportedPreviewSizes.ToList();
+
+				param.SetPreviewSize (176, 144);
+			}
+			#endif
+
+			_camera.SetParameters (param);
+
 			_camera.SetPreviewTexture (_surfaceTexture);
 			_camera.StartPreview ();
 		}
@@ -63,6 +93,11 @@ namespace Isv
 		public void UpdateTexImage()
 		{
 			_surfaceTexture.UpdateTexImage ();
+		}
+
+		public void GetTransformMatrix(float[] dst)
+		{
+			_surfaceTexture.GetTransformMatrix (dst);
 		}
 	}
 }
