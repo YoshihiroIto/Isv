@@ -1,25 +1,22 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-
 using OpenTK.Graphics;
 using OpenTK.Graphics.ES30;
 using OpenTK.Platform;
 using OpenTK.Platform.Android;
-
 using Android.Util;
 using Android.Views;
 using Android.Content;
 
-namespace Isv {
-
+namespace Isv
+{
 	class PaintingView : AndroidGameView
 	{
 		int viewportWidth, viewportHeight;
-		float [] vertices;
-
-        private ShaderProgram _simple;
-        private CameraTexture _cameraTex;
+		float[] vertices;
+		private ShaderProgram _simple;
+		private CameraTexture _cameraTex;
 
 		public PaintingView (Context context, IAttributeSet attrs) :
 			base (context, attrs)
@@ -113,42 +110,56 @@ namespace Isv {
 			// if you've registered delegates for OnLoad
 			base.OnLoad (e);
 
-			GL.Disable(All.DepthTest);
+			GL.Disable (All.DepthTest);
 
 			viewportHeight = Height;
 			viewportWidth = Width;
 
 			_simple = new ShaderProgram (Context.Assets, "Resources/shaders/Simple.vsh", "Resources/shaders/Simple.fsh"); 
-			_cameraTex = new CameraTexture();
+			_cameraTex = new CameraTexture ();
+
+			_cameraTex.PreviewFrame += (ss, ee) =>
+			{
+				MakeCurrent ();
+				_cameraTex.UpdateTexImage();
+				RenderTriangle ();
+			};
 
 			RenderTriangle ();
 		}
 
 		private unsafe void RenderTriangle ()
 		{
-			vertices = new float [] {
-				0.0f,  0.5f, 0.0f, 0.0f,  0.5f,
-				-0.5f, -0.5f, 0.0f, 0.0f, 1.0f,
-				0.5f, -0.5f, 0.0f, 1.0f, 1.0f,
-				};
+			var scale = 1.0f;
 
-			GL.ClearColor (0.7f, 0.7f, 0.7f, 1);
-			GL.Clear (ClearBufferMask.ColorBufferBit);
+			vertices = new [] {
+				-1.0f*scale, +1.0f*scale, 0.0f, 0.0f, 0.0f,
+				+1.0f*scale, +1.0f*scale, 0.0f, 1.0f, 0.0f,
+
+				-1.0f*scale, -1.0f*scale, 0.0f, 0.0f, 1.0f,
+				+1.0f*scale, -1.0f*scale, 0.0f, 1.0f, 1.0f,
+			};
+
+			GL.ClearColor (1.0f, 0.0f, 0.0f, 1);
+			GL.Clear (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 			GL.Viewport (0, 0, viewportWidth, viewportHeight);
 
 			_simple.Use ();
 
-			GL.VertexAttribPointer (ShaderProgram.AttrPosition, 3, All.Float, false, sizeof(float)*5, vertices);
+			var tex = (All)Android.Opengl.GLES11Ext.GlTextureExternalOes;
+			GL.ActiveTexture (All.Texture0);
+			GL.BindTexture (tex, _cameraTex.TextureName);
+
+			GL.VertexAttribPointer (ShaderProgram.AttrPosition, 3, All.Float, false, sizeof(float) * 5, vertices);
 			GL.EnableVertexAttribArray (ShaderProgram.AttrPosition);
 
-			fixed(float *texCoordHead = &vertices[2])
-			{
-				GL.VertexAttribPointer (ShaderProgram.AttrTexcoord, 2, All.Float, false, sizeof(float) * 5, texCoordHead);
+			fixed(float *texCoordHead = &vertices[3]) {
+				GL.VertexAttribPointer (ShaderProgram.AttrTexcoord, 2, All.Float, false, sizeof(float) * 5, new IntPtr (texCoordHead));
 				GL.EnableVertexAttribArray (ShaderProgram.AttrTexcoord);
 			}
 
-			GL.DrawArrays (All.Triangles, 0, 3);
+			GL.DrawArrays (All.TriangleStrip, 0, 4);
 
 			SwapBuffers ();
 		}
