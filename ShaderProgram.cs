@@ -16,7 +16,7 @@ using OpenTK;
 
 namespace Isv
 {
-	public class ShaderProgram : IDisposable
+	internal class ShaderProgram : IDisposable
 	{
         private int _program;
         private int _vsh;
@@ -35,7 +35,7 @@ namespace Isv
 			GL.AttachShader(_program, _vsh);
 			GL.AttachShader(_program, _fsh);
 
-			GL.BindAttribLocation (_program, 0, "vPosition");
+			GL.BindAttribLocation (_program, 0, "position");
 			GL.LinkProgram (_program);
 
 			int linked;
