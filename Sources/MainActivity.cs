@@ -22,6 +22,8 @@ namespace Isv
 
 			RequestWindowFeature (WindowFeatures.NoTitle);
 
+			Window.AddFlags (WindowManagerFlags.Fullscreen);
+
 			// Inflate our UI from its XML layout description
 			// - should match filename res/layout/main.xml ?
 			SetContentView (Resource.Layout.main);
