@@ -18,51 +18,49 @@ namespace Isv
 {
 	internal class ShaderProgram : IDisposable
 	{
-        private int _program;
+		protected int Program {
+			private set;
+			get;
+		}
+
         private int _vsh;
         private int _fsh;
 
         public const int AttribPosition = 0;
         public const int AttribTexcoord = 1;
 
-		public int UniformTexTransform {
-			get;
-			private set;
-		}
-
 		public ShaderProgram(AssetManager assetMan, string vshPath, string fshPath)
         {
-            _program = GL.CreateProgram();
+            Program = GL.CreateProgram();
 			_vsh = LoadShader(All.VertexShader,   LoadShaderSource(assetMan, vshPath));
 			_fsh = LoadShader(All.FragmentShader, LoadShaderSource(assetMan, fshPath));
 
-            System.Diagnostics.Debug.Assert(_program != 0);
+            System.Diagnostics.Debug.Assert(Program != 0);
             System.Diagnostics.Debug.Assert(_vsh != 0);
             System.Diagnostics.Debug.Assert(_fsh != 0);
 
-			GL.AttachShader(_program, _vsh);
-			GL.AttachShader(_program, _fsh);
+			GL.AttachShader(Program, _vsh);
+			GL.AttachShader(Program, _fsh);
 
-			GL.BindAttribLocation (_program, AttribPosition, "inPosition");
-			GL.BindAttribLocation (_program, AttribTexcoord, "inTexcoord");
-			GL.LinkProgram (_program);
-
-			UniformTexTransform = GL.GetUniformLocation(_program, new StringBuilder("texTransform"));
+			GL.BindAttribLocation (Program, AttribPosition, "inPosition");
+			GL.BindAttribLocation (Program, AttribTexcoord, "inTexcoord");
+			GL.LinkProgram (Program);
 
 			int linked;
-			GL.GetProgram (_program, All.LinkStatus, out linked);
+			GL.GetProgram (Program, All.LinkStatus, out linked);
+
 			if (linked == 0) {
 				// link failed
 				int length = 0;
-				GL.GetProgram (_program, All.InfoLogLength, out length);
+				GL.GetProgram (Program, All.InfoLogLength, out length);
 				if (length > 0) {
 					var log = new StringBuilder (length);
-					GL.GetProgramInfoLog (_program, length, out length, log);
+					GL.GetProgramInfoLog (Program, length, out length, log);
 					Log.Debug ("ShaderProgram", "Couldn't link program: " + log.ToString ());
 				}
 
-				GL.DeleteProgram (_program);
-                _program = 0;
+				GL.DeleteProgram (Program);
+                Program = 0;
 				throw new InvalidOperationException ("Unable to link program");
 			}
         }
@@ -74,10 +72,10 @@ namespace Isv
 
         public void Use()
         {
-            if (_program == 0)
+            if (Program == 0)
                 return;
 
-            GL.UseProgram(_program);
+            GL.UseProgram(Program);
         }
      
         private void Release()
@@ -94,10 +92,10 @@ namespace Isv
                 _fsh = 0;
             }
 
-            if (_program != 0)
+            if (Program != 0)
             {
-                GL.DeleteProgram(_program);
-                _program = 0;
+                GL.DeleteProgram(Program);
+                Program = 0;
             }
         }
 

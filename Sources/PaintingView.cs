@@ -16,7 +16,7 @@ namespace Isv
 	{
 		private int viewportWidth, viewportHeight;
 		private float[] vertices;
-		private ShaderProgram _simple;
+		private SimpleShaderProgram _simple;
 
 
 		private CameraTexture _cameraTex;
@@ -122,7 +122,7 @@ namespace Isv
 			viewportHeight = Height;
 			viewportWidth = Width;
 
-			_simple = new ShaderProgram (Context.Assets, "Resources/shaders/Simple.vsh", "Resources/shaders/Simple.fsh"); 
+			_simple = new SimpleShaderProgram (Context.Assets); 
 
 			#if false
 			_cameraTex = new CameraTexture ();
@@ -133,11 +133,13 @@ namespace Isv
 				_cameraTex.GetTransformMatrix(_texTransform);
 
 				GL.UniformMatrix4(_simple.UniformTexTransform, 1, false, _texTransform);
+				GL.Uniform1(_simple.UniformTex, 0);
 
-				RenderTriangle (_cameraTex.TextureName);
+				RenderQuad (_cameraTex.TextureName);
 			};
 			#endif
 
+			#if !false
 			_movieTex = new MovieTexture();
 			_movieTex.FrameAvailable += (ss, ee) =>
 			{
@@ -146,10 +148,12 @@ namespace Isv
 				_movieTex.GetTransformMatrix(_texTransform);
 
 				GL.UniformMatrix4(_simple.UniformTexTransform, 1, false, _texTransform);
+				GL.Uniform1(_simple.UniformTex, 0);
 
 				RenderQuad (_movieTex.TextureName);
 			};
 			_movieTex.Play ("/sdcard/Movies/Mayday2012a.mp4");
+			#endif
 
 		}
 

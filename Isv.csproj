@@ -51,10 +51,11 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Sources\MainActivity.cs" />
     <Compile Include="Sources\PaintingView.cs" />
-    <Compile Include="Sources\ShaderProgram.cs" />
     <Compile Include="Sources\Texture\CameraTexture.cs" />
     <Compile Include="Sources\Texture\MovieTexture.cs" />
     <Compile Include="Sources\Texture\VideoTextureBase.cs" />
+    <Compile Include="Sources\ShaderProgram\ShaderProgram.cs" />
+    <Compile Include="Sources\ShaderProgram\SimpleShaderProgram.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml">
@@ -90,6 +91,7 @@
     <Folder Include="Resources\shaders\" />
     <Folder Include="Sources\" />
     <Folder Include="Sources\Texture\" />
+    <Folder Include="Sources\ShaderProgram\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Resources\shaders\Simple.fsh" />
