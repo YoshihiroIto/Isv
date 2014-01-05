@@ -9,7 +9,5 @@ uniform lowp samplerExternalOES tex;
 
 void main()            
 {
-   //outFragColor = vec4 (0.0, 0.0, 1.0, 1.0);
-
    outFragColor = texture(tex, texcoord);
 }     

@@ -14,16 +14,20 @@ namespace Isv
 {
 	class PaintingView : AndroidGameView
 	{
-		private int viewportWidth, viewportHeight;
-		private float[] vertices;
-		private SimpleShaderProgram _simple;
+		private static readonly float[] vertices = new [] {
+			-1.0f, +1.0f, 0.0f, 0.0f, 1.0f,
+			+1.0f, +1.0f, 0.0f, 1.0f, 1.0f,
+			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+			+1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		};
+		private int _viewportWidth = 1;
+		private int _viewportHeight = 1;
+		private VideoBlendShaderProgram _videoBlend;
+		private MovieTexture _movieTexA;
+		private MovieTexture _movieTexB;
+		private CameraTexture _movieTexC;
 
-
-		private CameraTexture _cameraTex;
-		private MovieTexture _movieTex;
-
-
-		private float[] _texTransform = new float[16]; 
+		private float[] _blendRatio = new float[] {1.0f, 1.0f, 1.0f};
 
 		public PaintingView (Context context, IAttributeSet attrs) :
 			base (context, attrs)
@@ -39,6 +43,27 @@ namespace Isv
 
 		private void Initialize ()
 		{
+			RenderFrame += (s, e) => OnRender ();
+			UpdateFrame += (s, e) => OnUpdate ();
+
+			Touch += (sender, e) => 
+			{
+				var srcX = (float)e.Event.RawX;
+				var srcY = (float)e.Event.RawY;
+
+				var x = srcX / Width;
+				var y = srcY / Height;
+			
+				y -= 0.2f;
+				y *= 1.4f;
+
+				var index = Math.Max(0, Math.Min(2, (int)(x * 3.0f)));
+				var value = 1.0f - Math.Max(0.0f, Math.Min(1.0f, y));
+
+				_blendRatio[index] = value;
+
+				Console.WriteLine("{0}, {1}", index, value);
+			};
 		}
 
 		protected override void CreateFrameBuffer ()
@@ -49,6 +74,7 @@ namespace Isv
 				Log.Verbose ("TexturedCube", "Loading with high quality settings");
 
 				GraphicsMode = new GraphicsMode (new ColorFormat (32), 24, 0, 0); 
+
 				// if you don't call this, the context won't be created
 				base.CreateFrameBuffer ();
 				return;
@@ -56,7 +82,6 @@ namespace Isv
 				Log.Verbose ("TexturedCube", "{0}", ex);
 			}
 
-			// the default GraphicsMode that is set consists of (16, 16, 0, 0, 2, false)
 			try {
 				Log.Verbose ("TexturedCube", "Loading with default settings");
 
@@ -67,22 +92,6 @@ namespace Isv
 				Log.Verbose ("TexturedCube", "{0}", ex);
 			}
 
-			// Fallback modes
-			// If the first attempt at initializing the surface with a default graphics
-			// mode fails, then the app can try different configurations. Devices will
-			// support different modes, and what is valid for one might not be valid for
-			// another. If all options fail, you can set all values to 0, which will
-			// ask for the first available configuration the device has without any
-			// filtering.
-			// After a successful call to base.CreateFrameBuffer(), the GraphicsMode
-			// object will have its values filled with the actual values that the
-			// device returned.
-
-
-			// This is a setting that asks for any available 16-bit color mode with no
-			// other filters. It passes 0 to the buffers parameter, which is an invalid
-			// setting in the default OpenTK implementation but is valid in some
-			// Android implementations, so the AndroidGraphicsMode object allows it.
 			try {
 				Log.Verbose ("TexturedCube", "Loading with custom Android settings (low mode)");
 				GraphicsMode = new AndroidGraphicsMode (16, 0, 0, 0, 0, false);
@@ -93,11 +102,7 @@ namespace Isv
 			} catch (Exception ex) {
 				Log.Verbose ("TexturedCube", "{0}", ex);
 			}
-
-			// this is a setting that doesn't specify any color values. Certain devices
-			// return invalid graphics modes when any color level is requested, and in
-			// those cases, the only way to get a valid mode is to not specify anything,
-			// even requesting a default value of 0 would return an invalid mode.
+				
 			try {
 				Log.Verbose ("TexturedCube", "Loading with no Android settings");
 				GraphicsMode = new AndroidGraphicsMode (0, 4, 0, 0, 0, false);
@@ -113,70 +118,111 @@ namespace Isv
 
 		protected override void OnLoad (EventArgs e)
 		{
-			// This is completely optional and only needed
-			// if you've registered delegates for OnLoad
 			base.OnLoad (e);
 
-			GL.Disable (All.DepthTest);
+			_viewportWidth = Width;
+			_viewportHeight = Height;
 
-			viewportHeight = Height;
-			viewportWidth = Width;
+			_videoBlend = new VideoBlendShaderProgram (Context.Assets);
 
-			_simple = new SimpleShaderProgram (Context.Assets); 
+			_movieTexA = new MovieTexture ();
+			_movieTexA.FrameAvailable += OnFrameAvailable;
+			//_movieTexA.Play ("/sdcard/Movies/Mayday2012a.mp4");
+			_movieTexA.Play ("/sdcard/Movies/mtv.mp4");
 
-			#if false
-			_cameraTex = new CameraTexture ();
-			_cameraTex.FrameAvailable += (ss, ee) =>
-			{
-				MakeCurrent ();
-				_cameraTex.UpdateTexImage();
-				_cameraTex.GetTransformMatrix(_texTransform);
+			_movieTexB = new MovieTexture ();
+			_movieTexB.FrameAvailable += OnFrameAvailable;
+			_movieTexB.Play ("/sdcard/Movies/Mayday2012b.mp4");
+			//_movieTexB.Play ("/sdcard/Movies/mtv.mp4");
 
-				GL.UniformMatrix4(_simple.UniformTexTransform, 1, false, _texTransform);
-				GL.Uniform1(_simple.UniformTex, 0);
-
-				RenderQuad (_cameraTex.TextureName);
-			};
-			#endif
-
-			#if !false
-			_movieTex = new MovieTexture();
-			_movieTex.FrameAvailable += (ss, ee) =>
-			{
-				MakeCurrent ();
-				_movieTex.UpdateTexImage();
-				_movieTex.GetTransformMatrix(_texTransform);
-
-				GL.UniformMatrix4(_simple.UniformTexTransform, 1, false, _texTransform);
-				GL.Uniform1(_simple.UniformTex, 0);
-
-				RenderQuad (_movieTex.TextureName);
-			};
-			_movieTex.Play ("/sdcard/Movies/Mayday2012a.mp4");
-			#endif
-
+			_movieTexC = new CameraTexture ();
+			_movieTexC.FrameAvailable += OnFrameAvailable;
+	
+			Run ();
 		}
 
-		private unsafe void RenderQuad (int texName)
+		private bool _frameAvailableTexA;
+		private bool _frameAvailableTexB;
+		private bool _frameAvailableTexC;
+
+		private void OnFrameAvailable (object sender, EventArgs e)
 		{
-			vertices = new [] {
-				-1.0f, +1.0f, 0.0f, 0.0f, 1.0f,
-				+1.0f, +1.0f, 0.0f, 1.0f, 1.0f,
+			#if false
+			MakeCurrent ();
+			(sender as VideoTextureBase).UpdateTexImage ();
+			#endif
 
-				-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-				+1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-			};
+			if (sender == _movieTexA) {
+				_frameAvailableTexA = true;
+			}
+			if (sender == _movieTexB) {
+				_frameAvailableTexB = true;
+			}
+			if (sender == _movieTexC) {
+				_frameAvailableTexC = true;
+			}
+		}
 
-			GL.ClearColor (1.0f, 0.0f, 0.0f, 1);
+		protected override void OnResize (EventArgs e)
+		{
+			_viewportHeight = Height;
+			_viewportWidth = Width;
+		}
+
+		private void OnUpdate ()
+		{
+		}
+
+		private void OnRender ()
+		{
+			MakeCurrent ();
+
+			if (_frameAvailableTexA) {
+				_movieTexA.UpdateTexImage ();
+				_frameAvailableTexA = false;
+			}
+			if (_frameAvailableTexB) {
+				_movieTexB.UpdateTexImage ();
+				_frameAvailableTexB = false;
+			}
+			if (_frameAvailableTexC) {
+				_movieTexC.UpdateTexImage ();
+				_frameAvailableTexC = false;
+			}
+
+			GL.UniformMatrix4 (_videoBlend.UniformTexTransformA, 1, false, _movieTexA.Transform);
+			GL.UniformMatrix4 (_videoBlend.UniformTexTransformB, 1, false, _movieTexB.Transform);
+			GL.UniformMatrix4 (_videoBlend.UniformTexTransformC, 1, false, _movieTexC.Transform);
+			GL.Uniform1 (_videoBlend.UniformTexA, 0);
+			GL.Uniform1 (_videoBlend.UniformTexB, 1);
+			GL.Uniform1 (_videoBlend.UniformTexC, 2);
+			GL.Uniform3 (_videoBlend.UniformBlendRatio, 1, _blendRatio);
+
+			_videoBlend.Use ();
+
+			RenderQuad ();
+		}
+
+		private unsafe void RenderQuad ()
+		{
+			GL.Disable (All.DepthTest);
+
+			GL.ClearColor (0.0f, 0.0f, 0.0f, 1.0f);
 			GL.Clear (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-			GL.Viewport (0, 0, viewportWidth, viewportHeight);
+			GL.Viewport (0, 0, _viewportWidth, _viewportHeight);
 
-			_simple.Use ();
-
-			var tex = (All)Android.Opengl.GLES11Ext.GlTextureExternalOes;
 			GL.ActiveTexture (All.Texture0);
-			GL.BindTexture (tex, texName);
+			GL.BindTexture ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, 0);
+			GL.BindTexture ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, _movieTexA.TextureName);
+
+			GL.ActiveTexture (All.Texture1);
+			GL.BindTexture ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, 0);
+			GL.BindTexture ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, _movieTexB.TextureName);
+
+			GL.ActiveTexture (All.Texture2);
+			GL.BindTexture ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, 0);
+			GL.BindTexture ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, _movieTexC.TextureName);
 
 			GL.VertexAttribPointer (ShaderProgram.AttribPosition, 3, All.Float, false, sizeof(float) * 5, vertices);
 			GL.EnableVertexAttribArray (ShaderProgram.AttribPosition);
@@ -189,12 +235,6 @@ namespace Isv
 			GL.DrawArrays (All.TriangleStrip, 0, 4);
 
 			SwapBuffers ();
-		}
-			
-		protected override void OnResize (EventArgs e)
-		{
-			viewportHeight = Height;
-			viewportWidth = Width;
 		}
 	}
 }

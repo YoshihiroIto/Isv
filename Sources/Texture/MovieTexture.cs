@@ -35,6 +35,8 @@ namespace Isv
 			_mediaPlayer.Stop ();
 
 			_mediaPlayer.SetDataSource (filePath);
+			_mediaPlayer.Looping = true;
+
 			_mediaPlayer.Prepare ();
 			_mediaPlayer.Start ();
         }

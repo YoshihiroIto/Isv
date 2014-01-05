@@ -30,7 +30,7 @@ namespace Isv
 			var param = _camera.GetParameters ();
 
 			// FPS
-            param.PreviewFrameRate = param.SupportedPreviewFrameRates.Last ().IntValue ();
+			param.PreviewFrameRate = param.SupportedPreviewFrameRates.Last ().IntValue ();
 
 			// オートフォーカス
 			param.FocusMode = Android.Hardware.Camera.Parameters.FocusModeContinuousVideo;
@@ -48,6 +48,15 @@ namespace Isv
 			_camera.SetParameters (param);
 			_camera.SetPreviewTexture (SurfaceTexture);
 			_camera.StartPreview ();
+		}
+
+		public override void OnFrameAvailable (SurfaceTexture surfaceTexture)
+		{
+			base.OnFrameAvailable (surfaceTexture);
+
+			// 180度回転
+			Android.Opengl.Matrix.RotateM (Transform, 0, 180.0f, 0.0f, 0.0f, 1.0f);
+			Android.Opengl.Matrix.TranslateM (Transform, 0, -1.0f, -1.0f, 0.0f);
 		}
 	}
 }

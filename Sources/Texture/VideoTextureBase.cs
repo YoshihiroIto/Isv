@@ -27,6 +27,11 @@ namespace Isv
 
 		private int[] _textures = new int[1];
 
+		public float[] Transform {
+			private set;
+			get;
+		}
+
 		protected SurfaceTexture SurfaceTexture {
 			get;
 			private set;
@@ -34,30 +39,31 @@ namespace Isv
 
 		public VideoTextureBase()
 		{
+			Transform = new float[16];
+
 			GL.GenTextures (_textures.Length, _textures);
 
 			GL.BindTexture ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, TextureName);
 			GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureMinFilter, (int)All.Nearest);
-			GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureMagFilter, (int)TextureMagFilter.Nearest);
+			GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureMagFilter, (int)All.Nearest);
+			GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureWrapS, (int)All.Repeat);
+			GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureWrapT, (int)All.Repeat);
 
 			SurfaceTexture = new SurfaceTexture (TextureName);
 			SurfaceTexture.SetOnFrameAvailableListener (this);
 		}
 
-		public void OnFrameAvailable (SurfaceTexture surfaceTexture)
+		public virtual void OnFrameAvailable (SurfaceTexture surfaceTexture)
 		{
+			SurfaceTexture.GetTransformMatrix (Transform);
+
 			if (FrameAvailable != null)
 				FrameAvailable (this, EventArgs.Empty);
 		}
 
-		public void UpdateTexImage ()
+		public virtual void UpdateTexImage ()
 		{
 			SurfaceTexture.UpdateTexImage ();
-		}
-
-		public void GetTransformMatrix (float[] dst)
-		{
-			SurfaceTexture.GetTransformMatrix (dst);
 		}
 	}
 }

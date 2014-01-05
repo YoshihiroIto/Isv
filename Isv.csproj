@@ -56,6 +56,7 @@
     <Compile Include="Sources\Texture\VideoTextureBase.cs" />
     <Compile Include="Sources\ShaderProgram\ShaderProgram.cs" />
     <Compile Include="Sources\ShaderProgram\SimpleShaderProgram.cs" />
+    <Compile Include="Sources\ShaderProgram\VideoBlendShaderProgram.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml">
@@ -88,13 +89,15 @@
     <Folder Include="Resources\drawable-mdpi\" />
     <Folder Include="Resources\drawable-xhdpi\" />
     <Folder Include="Resources\drawable-xxhdpi\" />
-    <Folder Include="Resources\shaders\" />
     <Folder Include="Sources\" />
     <Folder Include="Sources\Texture\" />
     <Folder Include="Sources\ShaderProgram\" />
+    <Folder Include="Resources\shaders\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Resources\shaders\Simple.fsh" />
     <AndroidAsset Include="Resources\shaders\Simple.vsh" />
+    <AndroidAsset Include="Resources\shaders\VideoBlend.vsh" />
+    <AndroidAsset Include="Resources\shaders\VideoBlend.fsh" />
   </ItemGroup>
 </Project>
