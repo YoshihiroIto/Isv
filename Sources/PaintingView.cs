@@ -14,10 +14,14 @@ namespace Isv
 {
 	class PaintingView : AndroidGameView
 	{
-		int viewportWidth, viewportHeight;
-		float[] vertices;
+		private int viewportWidth, viewportHeight;
+		private float[] vertices;
 		private ShaderProgram _simple;
+
+
 		private CameraTexture _cameraTex;
+		private MovieTexture _movieTex;
+
 
 		private float[] _texTransform = new float[16]; 
 
@@ -119,9 +123,10 @@ namespace Isv
 			viewportWidth = Width;
 
 			_simple = new ShaderProgram (Context.Assets, "Resources/shaders/Simple.vsh", "Resources/shaders/Simple.fsh"); 
-			_cameraTex = new CameraTexture ();
 
-			_cameraTex.PreviewFrame += (ss, ee) =>
+			#if false
+			_cameraTex = new CameraTexture ();
+			_cameraTex.FrameAvailable += (ss, ee) =>
 			{
 				MakeCurrent ();
 				_cameraTex.UpdateTexImage();
@@ -129,13 +134,26 @@ namespace Isv
 
 				GL.UniformMatrix4(_simple.UniformTexTransform, 1, false, _texTransform);
 
-				RenderTriangle ();
+				RenderTriangle (_cameraTex.TextureName);
 			};
+			#endif
 
-			RenderTriangle ();
+			_movieTex = new MovieTexture();
+			_movieTex.FrameAvailable += (ss, ee) =>
+			{
+				MakeCurrent ();
+				_movieTex.UpdateTexImage();
+				_movieTex.GetTransformMatrix(_texTransform);
+
+				GL.UniformMatrix4(_simple.UniformTexTransform, 1, false, _texTransform);
+
+				RenderQuad (_movieTex.TextureName);
+			};
+			_movieTex.Play ("/sdcard/Movies/Mayday2012a.mp4");
+
 		}
 
-		private unsafe void RenderTriangle ()
+		private unsafe void RenderQuad (int texName)
 		{
 			vertices = new [] {
 				-1.0f, +1.0f, 0.0f, 0.0f, 1.0f,
@@ -154,7 +172,7 @@ namespace Isv
 
 			var tex = (All)Android.Opengl.GLES11Ext.GlTextureExternalOes;
 			GL.ActiveTexture (All.Texture0);
-			GL.BindTexture (tex, _cameraTex.TextureName);
+			GL.BindTexture (tex, texName);
 
 			GL.VertexAttribPointer (ShaderProgram.AttribPosition, 3, All.Float, false, sizeof(float) * 5, vertices);
 			GL.EnableVertexAttribArray (ShaderProgram.AttribPosition);
@@ -168,17 +186,11 @@ namespace Isv
 
 			SwapBuffers ();
 		}
-
-		// this is called whenever android raises the SurfaceChanged event
+			
 		protected override void OnResize (EventArgs e)
 		{
 			viewportHeight = Height;
 			viewportWidth = Width;
-
-			// the surface change event makes your context
-			// not be current, so be sure to make it current again
-			MakeCurrent ();
-			RenderTriangle ();
 		}
 	}
 }
