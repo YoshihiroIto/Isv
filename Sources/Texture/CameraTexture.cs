@@ -54,9 +54,11 @@ namespace Isv
 		{
 			base.OnFrameAvailable (surfaceTexture);
 
+			#if false
 			// 180度回転
 			Android.Opengl.Matrix.RotateM (Transform, 0, 180.0f, 0.0f, 0.0f, 1.0f);
 			Android.Opengl.Matrix.TranslateM (Transform, 0, -1.0f, -1.0f, 0.0f);
+			#endif
 		}
 	}
 }
