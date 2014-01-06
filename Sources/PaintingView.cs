@@ -165,8 +165,10 @@ namespace Isv
 
 		protected override void OnResize (EventArgs e)
 		{
-			_viewportHeight = Height;
 			_viewportWidth = Width;
+			_viewportHeight = Height;
+
+			_movieTexC.SetPreviewSize (_viewportWidth, _viewportHeight);
 		}
 
 		private void OnUpdate ()

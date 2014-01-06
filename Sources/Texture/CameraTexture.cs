@@ -21,6 +21,8 @@ namespace Isv
 	internal class CameraTexture : VideoTextureBase
 	{
 		private Android.Hardware.Camera _camera;
+		private float _previewWidth = 1;
+		private float _previewHeight = 1;
 
 		public CameraTexture ()
 		{
@@ -45,6 +47,9 @@ namespace Isv
 			}
 			#endif
 
+			_previewWidth = param.PreviewSize.Width;
+			_previewHeight = param.PreviewSize.Height;
+
 			_camera.SetParameters (param);
 			_camera.SetPreviewTexture (SurfaceTexture);
 			_camera.StartPreview ();
@@ -59,6 +64,24 @@ namespace Isv
 			Android.Opengl.Matrix.RotateM (Transform, 0, 180.0f, 0.0f, 0.0f, 1.0f);
 			Android.Opengl.Matrix.TranslateM (Transform, 0, -1.0f, -1.0f, 0.0f);
 			#endif
+
+			// アスペクト比補正
+			{
+				var param = _camera.GetParameters ();
+
+				var width = (float)param.PreviewSize.Width;
+				var height = (float)param.PreviewSize.Height;
+
+				var scale = (_previewWidth / _previewHeight) / (width / height);
+
+				Android.Opengl.Matrix.ScaleM (Transform, 0, scale, 1.0f, 1.0f);
+			}
+		}
+
+		public void SetPreviewSize(int width, int height)
+		{
+			_previewWidth = width;
+			_previewHeight = height;
 		}
 	}
 }
