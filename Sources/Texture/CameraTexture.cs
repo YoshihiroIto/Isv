@@ -21,8 +21,8 @@ namespace Isv
 	internal class CameraTexture : VideoTextureBase
 	{
 		private Android.Hardware.Camera _camera;
-		private float _previewWidth = 1;
-		private float _previewHeight = 1;
+		private float _previewWidth = 1.0f;
+		private float _previewHeight = 1.0f;
 
 		public CameraTexture ()
 		{

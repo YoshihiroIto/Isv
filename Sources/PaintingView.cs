@@ -27,6 +27,10 @@ namespace Isv
 		private MovieTexture _movieTexB;
 		private CameraTexture _movieTexC;
 
+		private bool _frameAvailableTexA;
+		private bool _frameAvailableTexB;
+		private bool _frameAvailableTexC;
+
 		private float[] _blendRatio = new float[] {1.0f, 1.0f, 1.0f};
 
 		public PaintingView (Context context, IAttributeSet attrs) :
@@ -140,10 +144,6 @@ namespace Isv
 	
 			Run ();
 		}
-
-		private bool _frameAvailableTexA;
-		private bool _frameAvailableTexB;
-		private bool _frameAvailableTexC;
 
 		private void OnFrameAvailable (object sender, EventArgs e)
 		{
