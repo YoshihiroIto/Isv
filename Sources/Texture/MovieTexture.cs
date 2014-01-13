@@ -19,7 +19,7 @@ using OpenTK.Platform.Android;
 
 namespace Isv
 {
-	internal class MovieTexture : VideoTextureBase
+	internal class MovieTexture : VideoTextureBase, IDisposable
 	{
         private MediaPlayer _mediaPlayer;
 
@@ -29,6 +29,14 @@ namespace Isv
 			_mediaPlayer.SetSurface (new Surface(SurfaceTexture));
 			//_mediaPlayer.SetScreenOnWhilePlaying (true);
         }
+
+		public void Dispose()
+		{
+			_mediaPlayer.Stop ();
+			_mediaPlayer.Dispose ();
+
+			base.Dispose ();
+		}
 
         public void Play(string filePath)
         {

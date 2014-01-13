@@ -18,7 +18,7 @@ using OpenTK.Platform.Android;
 
 namespace Isv
 {
-	internal class CameraTexture : VideoTextureBase
+	internal class CameraTexture : VideoTextureBase, IDisposable
 	{
 		private Android.Hardware.Camera _camera;
 		private float _previewWidth = 1.0f;
@@ -55,9 +55,25 @@ namespace Isv
 			_camera.StartPreview ();
 		}
 
+		private bool _isDisposed;
+
+		public void Dispose()
+		{
+			_isDisposed = true;
+
+			_camera.StopPreview ();
+			_camera.Release ();
+			_camera.Dispose ();
+
+			base.Dispose ();
+		}
+
 		public override void OnFrameAvailable (SurfaceTexture surfaceTexture)
 		{
 			base.OnFrameAvailable (surfaceTexture);
+
+			if (_isDisposed)
+				return;
 
 			#if false
 			// 180度回転

@@ -31,7 +31,7 @@ namespace Isv
 		private bool _frameAvailableTexB;
 		private bool _frameAvailableTexC;
 
-		private float[] _blendRatio = new float[] {1.0f, 1.0f, 1.0f};
+		private readonly float[] _blendRatio = new float[] {1.0f, 1.0f, 1.0f};
 
 		public PaintingView (Context context, IAttributeSet attrs) :
 			base (context, attrs)
@@ -131,7 +131,6 @@ namespace Isv
 
 			_movieTexA = new MovieTexture ();
 			_movieTexA.FrameAvailable += OnFrameAvailable;
-			//_movieTexA.Play ("/sdcard/Movies/Mayday2012a.mp4");
 			_movieTexA.Play ("/sdcard/Movies/mtv.mp4");
 
 			_movieTexB = new MovieTexture ();
@@ -143,6 +142,16 @@ namespace Isv
 			_movieTexC.FrameAvailable += OnFrameAvailable;
 	
 			Run ();
+		}
+
+		protected override void OnUnload (EventArgs e)
+		{
+			_videoBlend.Dispose ();
+			_movieTexA.Dispose ();
+			_movieTexB.Dispose ();
+			_movieTexC.Dispose ();
+
+			base.OnUnload (e);
 		}
 
 		private void OnFrameAvailable (object sender, EventArgs e)
@@ -170,7 +179,7 @@ namespace Isv
 
 			_movieTexC.SetPreviewSize (_viewportWidth, _viewportHeight);
 		}
-
+				
 		private void OnUpdate ()
 		{
 		}

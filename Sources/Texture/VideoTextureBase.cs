@@ -20,6 +20,7 @@ using OpenTK.Platform.Android;
 namespace Isv
 {
 	internal abstract class VideoTextureBase : Java.Lang.Object,
+	IDisposable,
 	SurfaceTexture.IOnFrameAvailableListener
 	{
 		public int TextureName{ get { return _textures [0]; } }
@@ -51,6 +52,11 @@ namespace Isv
 
 			SurfaceTexture = new SurfaceTexture (TextureName);
 			SurfaceTexture.SetOnFrameAvailableListener (this);
+		}
+
+		public void Dispose()
+		{
+			GL.DeleteTextures(_textures.Length, _textures);
 		}
 
 		public virtual void OnFrameAvailable (SurfaceTexture surfaceTexture)
