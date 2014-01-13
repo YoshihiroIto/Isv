@@ -13,6 +13,7 @@ namespace Isv
 #if __ANDROID_11__
 		HardwareAccelerated=false,
 #endif
+		ScreenOrientation = ScreenOrientation.SensorLandscape,
 		ConfigurationChanges = ConfigChanges.KeyboardHidden, LaunchMode = LaunchMode.SingleTask)]
 	public class MainActivity : Activity
 	{
