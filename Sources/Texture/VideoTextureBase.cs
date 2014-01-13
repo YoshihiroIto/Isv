@@ -54,7 +54,7 @@ namespace Isv
 			SurfaceTexture.SetOnFrameAvailableListener (this);
 		}
 
-		public void Dispose()
+		public new void Dispose()
 		{
 			GL.DeleteTextures(_textures.Length, _textures);
 		}

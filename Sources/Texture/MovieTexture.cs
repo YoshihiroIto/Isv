@@ -48,7 +48,7 @@ namespace Isv
 
 			_mediaPlayer.Prepare ();
 			_mediaPlayer.Start ();
-        }
+		}
 	}
 }
 

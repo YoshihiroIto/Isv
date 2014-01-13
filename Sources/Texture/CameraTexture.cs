@@ -47,6 +47,8 @@ namespace Isv
 			}
 			#endif
 
+			var a = param.PreviewSize;
+
 			_previewWidth = param.PreviewSize.Width;
 			_previewHeight = param.PreviewSize.Height;
 
@@ -57,7 +59,7 @@ namespace Isv
 
 		private bool _isDisposed;
 
-		public void Dispose()
+		public new void Dispose()
 		{
 			_isDisposed = true;
 

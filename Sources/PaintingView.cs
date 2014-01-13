@@ -31,7 +31,7 @@ namespace Isv
 		private bool _frameAvailableTexB;
 		private bool _frameAvailableTexC;
 
-		private readonly float[] _blendRatio = new float[] {1.0f, 1.0f, 1.0f};
+		private readonly float[] _blendRatio = new [] {0.0f, 1.0f, 1.0f};
 
 		public PaintingView (Context context, IAttributeSet attrs) :
 			base (context, attrs)
@@ -45,29 +45,34 @@ namespace Isv
 			Initialize ();
 		}
 
+		public void SetBlendRatio(int index, float ratio)
+		{
+			_blendRatio [index] = ratio;
+		}
+
+		public override bool OnTouchEvent (MotionEvent e)
+		{
+			var srcX = (float)e.RawX;
+			var srcY = (float)e.RawY;
+
+			var x = srcX / Width;
+			var y = srcY / Height;
+
+			y -= 0.2f;
+			y *= 1.4f;
+
+			var index = Math.Max(0, Math.Min(2, (int)(x * 3.0f)));
+			var value = 1.0f - Math.Max(0.0f, Math.Min(1.0f, y));
+
+			_blendRatio[index] = value;
+
+			return base.OnTouchEvent (e);
+		}
+
 		private void Initialize ()
 		{
 			RenderFrame += (s, e) => OnRender ();
 			UpdateFrame += (s, e) => OnUpdate ();
-
-			Touch += (sender, e) => 
-			{
-				var srcX = (float)e.Event.RawX;
-				var srcY = (float)e.Event.RawY;
-
-				var x = srcX / Width;
-				var y = srcY / Height;
-			
-				y -= 0.2f;
-				y *= 1.4f;
-
-				var index = Math.Max(0, Math.Min(2, (int)(x * 3.0f)));
-				var value = 1.0f - Math.Max(0.0f, Math.Min(1.0f, y));
-
-				_blendRatio[index] = value;
-
-				Console.WriteLine("{0}, {1}", index, value);
-			};
 		}
 
 		protected override void CreateFrameBuffer ()

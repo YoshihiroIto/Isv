@@ -57,6 +57,7 @@
     <Compile Include="Sources\ShaderProgram\ShaderProgram.cs" />
     <Compile Include="Sources\ShaderProgram\SimpleShaderProgram.cs" />
     <Compile Include="Sources\ShaderProgram\VideoBlendShaderProgram.cs" />
+    <Compile Include="Sources\ExternalVideoPresentation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml">
