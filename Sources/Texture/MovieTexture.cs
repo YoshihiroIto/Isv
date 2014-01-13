@@ -27,10 +27,11 @@ namespace Isv
         {
 			_mediaPlayer = new MediaPlayer ();
 			_mediaPlayer.SetSurface (new Surface(SurfaceTexture));
+			_mediaPlayer.SetVolume (0.0f, 0.0f);
 			//_mediaPlayer.SetScreenOnWhilePlaying (true);
         }
 
-		public void Dispose()
+		public new void Dispose()
 		{
 			_mediaPlayer.Stop ();
 			_mediaPlayer.Dispose ();
