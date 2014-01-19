@@ -60,20 +60,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/linearLayout4">
-            <Button
-                android:text="A"
+            <ToggleButton
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/btnBlendA" />
-            <Button
-                android:text="B"
+            <ToggleButton
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/btnBlendB" />
-            <Button
-                android:text="C"
+            <ToggleButton
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

@@ -31,7 +31,8 @@ namespace Isv
 		private bool _frameAvailableTexB;
 		private bool _frameAvailableTexC;
 
-		private readonly float[] _blendRatio = new [] {0.0f, 1.0f, 1.0f};
+		private readonly float[] _blendRatio = new [] {0.0f, 0.0f, 0.0f};
+		private readonly bool[] _blendDir = new [] {false, false, false};
 
 		public PaintingView (Context context, IAttributeSet attrs) :
 			base (context, attrs)
@@ -73,6 +74,14 @@ namespace Isv
 			case Channel.C:
 				break;
 			}
+		}
+
+		private Channel blendUpChannel;
+
+		public void StartBlend(Channel channel, bool isUp)
+		{
+			_blendDir [(int)channel] = isUp;
+			blendUpChannel = channel;
 		}
 
 		public void SetBlendRatio(int index, float ratio)
@@ -238,6 +247,16 @@ namespace Isv
 			if (_frameAvailableTexC) {
 				_movieTexC.UpdateTexImage ();
 				_frameAvailableTexC = false;
+			}
+
+			for (var i = 0; i != 3; ++i) {
+
+				if (_blendDir[i])
+					_blendRatio [i] += 0.3f;
+				else
+					_blendRatio [i] -= 0.3f;
+
+				_blendRatio [i] = Math.Min(1.0f, Math.Max(0.0f, _blendRatio [i]));
 			}
 
 			GL.UniformMatrix4 (_videoBlend.UniformTexTransformA, 1, false, _movieTexA.Transform);

@@ -170,21 +170,24 @@ namespace Isv
 		private ListView lvwChB;
 		private Button btnSeekA;
 		private Button btnSeekB;
-
-		private Button btnBlendA;
-		private Button btnBlendB;
-		private Button btnBlendC;
+		private ToggleButton btnBlendA;
+		private ToggleButton btnBlendB;
+		private ToggleButton btnBlendC;
 
 		private void InitializeControl()
 		{
 			lvwChA = FindViewById<ListView>(Resource.Id.lvwChA);
 			lvwChB = FindViewById<ListView>(Resource.Id.lvwChB);
 
-			lvwChA.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, Movies);
-			lvwChB.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, Movies);
-
 			btnSeekA = FindViewById<Button>(Resource.Id.btnSeekA);
-			btnSeekB = FindViewById<Button>(Resource.Id.btnSeekB);
+            btnSeekB = FindViewById<Button>(Resource.Id.btnSeekB);
+
+            btnBlendA = FindViewById<ToggleButton>(Resource.Id.btnBlendA);
+            btnBlendB = FindViewById<ToggleButton>(Resource.Id.btnBlendB);
+            btnBlendC = FindViewById<ToggleButton>(Resource.Id.btnBlendC);
+
+            lvwChA.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, Movies);
+            lvwChB.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, Movies);
 
 			//
 			btnSeekA.Tag = (int)Channel.A;
@@ -197,6 +200,14 @@ namespace Isv
 			lvwChB.Tag = (int)Channel.B;
 			lvwChA.ItemClick += OnMovieItemChanged;
 			lvwChB.ItemClick += OnMovieItemChanged;
+
+            //
+            btnBlendA.Tag = (int)Channel.A;
+            btnBlendB.Tag = (int)Channel.B;
+            btnBlendC.Tag = (int)Channel.C;
+			btnBlendA.CheckedChange += OnBlendChanged; 
+			btnBlendB.CheckedChange += OnBlendChanged; 
+			btnBlendC.CheckedChange += OnBlendChanged; 
 		}
 
 		private void OnSeekClick(object sender, EventArgs e)
@@ -214,6 +225,13 @@ namespace Isv
 		                                                                                                                                                                              
 			_presentation.PaintingView.Play ((Channel)(int)listView.Tag, filePath);
 		}
+
+		private void OnBlendChanged(object sender, EventArgs e)
+        {
+			var button = sender as ToggleButton;
+
+			_presentation.PaintingView.StartBlend ((Channel)(int)button.Tag, button.Checked);
+        }
 
 		private static string MovieDir = "/sdcard/Movies/";
 
