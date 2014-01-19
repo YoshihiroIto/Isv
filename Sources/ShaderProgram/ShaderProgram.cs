@@ -2,12 +2,10 @@ using System;
 using System.IO;
 using System.Text;
 using System.Diagnostics;
-
 using Android.Content;
 using Android.Content.Res;
 using Android.Util;
 using Android.Views;
-
 using OpenTK.Graphics;
 using OpenTK.Graphics.ES30;
 using OpenTK.Platform;
@@ -23,24 +21,23 @@ namespace Isv
 			get;
 		}
 
-        private int _vsh;
-        private int _fsh;
+		private int _vsh;
+		private int _fsh;
+		public const int AttribPosition = 0;
+		public const int AttribTexcoord = 1;
 
-        public const int AttribPosition = 0;
-        public const int AttribTexcoord = 1;
+		public ShaderProgram (AssetManager assetMan, string vshPath, string fshPath)
+		{
+			Program = GL.CreateProgram ();
+			_vsh = LoadShader (All.VertexShader, LoadShaderSource (assetMan, vshPath));
+			_fsh = LoadShader (All.FragmentShader, LoadShaderSource (assetMan, fshPath));
 
-		public ShaderProgram(AssetManager assetMan, string vshPath, string fshPath)
-        {
-            Program = GL.CreateProgram();
-			_vsh = LoadShader(All.VertexShader,   LoadShaderSource(assetMan, vshPath));
-			_fsh = LoadShader(All.FragmentShader, LoadShaderSource(assetMan, fshPath));
+			System.Diagnostics.Debug.Assert (Program != 0);
+			System.Diagnostics.Debug.Assert (_vsh != 0);
+			System.Diagnostics.Debug.Assert (_fsh != 0);
 
-            System.Diagnostics.Debug.Assert(Program != 0);
-            System.Diagnostics.Debug.Assert(_vsh != 0);
-            System.Diagnostics.Debug.Assert(_fsh != 0);
-
-			GL.AttachShader(Program, _vsh);
-			GL.AttachShader(Program, _fsh);
+			GL.AttachShader (Program, _vsh);
+			GL.AttachShader (Program, _fsh);
 
 			GL.BindAttribLocation (Program, AttribPosition, "inPosition");
 			GL.BindAttribLocation (Program, AttribTexcoord, "inTexcoord");
@@ -60,53 +57,49 @@ namespace Isv
 				}
 
 				GL.DeleteProgram (Program);
-                Program = 0;
+				Program = 0;
 				throw new InvalidOperationException ("Unable to link program");
 			}
-        }
+		}
 
-        public void Dispose()
-        {
-            Release();
-        }
+		public void Dispose ()
+		{
+			Release ();
+		}
 
-        public void Use()
-        {
-            if (Program == 0)
-                return;
+		public void Use ()
+		{
+			if (Program == 0)
+				return;
 
-            GL.UseProgram(Program);
-        }
-     
-        private void Release()
-        {
-            if (_vsh != 0)
-            {
-                GL.DeleteShader(_vsh);
-                _vsh = 0;
-            }
+			GL.UseProgram (Program);
+		}
 
-            if (_fsh != 0)
-            {
-                GL.DeleteShader(_fsh);
-                _fsh = 0;
-            }
+		private void Release ()
+		{
+			if (_vsh != 0) {
+				GL.DeleteShader (_vsh);
+				_vsh = 0;
+			}
 
-            if (Program != 0)
-            {
-                GL.DeleteProgram(Program);
-                Program = 0;
-            }
-        }
+			if (_fsh != 0) {
+				GL.DeleteShader (_fsh);
+				_fsh = 0;
+			}
 
-		private static string LoadShaderSource(AssetManager assetMan, string path)
-        {
-			using (var input = assetMan.Open(path))
-			using (var reader = new StreamReader(input))
-            {
-                return reader.ReadToEnd();
-            }
-        }
+			if (Program != 0) {
+				GL.DeleteProgram (Program);
+				Program = 0;
+			}
+		}
+
+		private static string LoadShaderSource (AssetManager assetMan, string path)
+		{
+			using (var input = assetMan.Open (path))
+			using (var reader = new StreamReader (input)) {
+				return reader.ReadToEnd ();
+			}
+		}
 
 		private static int LoadShader (All type, string source)
 		{
@@ -115,7 +108,7 @@ namespace Isv
 				throw new InvalidOperationException ("Unable to create shader");
 
 			int length = 0;
-			GL.ShaderSource (shader, 1, new string [] {source}, (int[])null);
+			GL.ShaderSource (shader, source);
 			GL.CompileShader (shader);
 
 			int compiled = 0;

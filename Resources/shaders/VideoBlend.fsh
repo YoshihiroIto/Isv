@@ -1,21 +1,20 @@
 #version 300 es
 #extension GL_OES_EGL_image_external : require
 
-in highp vec2 texcoordA;
-in highp vec2 texcoordB;
-in highp vec2 texcoordC;
+in vec2 texcoordA;
+in vec2 texcoordB;
+in vec2 texcoordC;
 
-out highp vec4 outFragColor;
+out mediump vec4 outFragColor;
 
-uniform highp samplerExternalOES texA;
-uniform highp samplerExternalOES texB;
-uniform highp samplerExternalOES texC;
+uniform samplerExternalOES texA;
+uniform samplerExternalOES texB;
+uniform samplerExternalOES texC;
 
-uniform highp vec3 blendRatio;
+uniform vec3 blendRatio;
 
 const vec3 monochromeScale = vec3(0.298912, 0.586611, 0.114478);
 const vec2 frag = vec2(1.0 / 1920.0, 1.0 / 1080.0);
-
 const float thresold = 0.85;
 
 void main()            
@@ -63,7 +62,7 @@ void main()
     float gray = dot(destColor, monochromeScale);
     gray -= 1.0 - thresold;
     gray /= thresold;
-    outputColor.rgb += vec3(gray);
+    outputColor.rgb += vec3(gray, gray, gray);
 
     //
     outFragColor = outputColor;

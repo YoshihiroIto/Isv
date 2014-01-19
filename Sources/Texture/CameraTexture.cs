@@ -47,8 +47,6 @@ namespace Isv
 			}
 			#endif
 
-			var a = param.PreviewSize;
-
 			_previewWidth = param.PreviewSize.Width;
 			_previewHeight = param.PreviewSize.Height;
 
@@ -76,13 +74,7 @@ namespace Isv
 
 			if (_isDisposed)
 				return;
-
-			#if false
-			// 180度回転
-			Android.Opengl.Matrix.RotateM (Transform, 0, 180.0f, 0.0f, 0.0f, 1.0f);
-			Android.Opengl.Matrix.TranslateM (Transform, 0, -1.0f, -1.0f, 0.0f);
-			#endif
-
+				
 			// アスペクト比補正
 			{
 				var param = _camera.GetParameters ();

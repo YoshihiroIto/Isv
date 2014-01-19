@@ -47,8 +47,8 @@ namespace Isv
 			GL.BindTexture ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, TextureName);
 			GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureMinFilter, (int)All.Nearest);
 			GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureMagFilter, (int)All.Nearest);
-			GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureWrapS, (int)All.Repeat);
-			GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureWrapT, (int)All.Repeat);
+			//GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureWrapS, (int)All.Repeat);
+			//GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureWrapT, (int)All.Repeat);
 
 			SurfaceTexture = new SurfaceTexture (TextureName);
 			SurfaceTexture.SetOnFrameAvailableListener (this);

@@ -129,6 +129,8 @@ namespace Isv
 		{
 			base.OnLoad (e);
 
+			MakeCurrent ();
+
 			_viewportWidth = Width;
 			_viewportHeight = Height;
 
@@ -193,6 +195,8 @@ namespace Isv
 		{
 			MakeCurrent ();
 
+			_videoBlend.Use ();
+
 			if (_frameAvailableTexA) {
 				_movieTexA.UpdateTexImage ();
 				_frameAvailableTexA = false;
@@ -213,8 +217,6 @@ namespace Isv
 			GL.Uniform1 (_videoBlend.UniformTexB, 1);
 			GL.Uniform1 (_videoBlend.UniformTexC, 2);
 			GL.Uniform3 (_videoBlend.UniformBlendRatio, 1, _blendRatio);
-
-			_videoBlend.Use ();
 
 			RenderQuad ();
 		}
