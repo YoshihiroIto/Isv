@@ -45,6 +45,36 @@ namespace Isv
 			Initialize ();
 		}
 
+		public void SeekBegin(Channel channel)
+		{
+			switch(channel)
+			{
+			case Channel.A:
+				_movieTexA.SeekBegin ();
+				break;
+			case Channel.B:
+				_movieTexB.SeekBegin ();
+				break;
+			case Channel.C:
+				break;
+			}
+		}
+
+		public void Play(Channel channel, string filePath)
+		{
+			switch(channel)
+			{
+			case Channel.A:
+				_movieTexA.Play (filePath);
+				break;
+			case Channel.B:
+				_movieTexB.Play (filePath);
+				break;
+			case Channel.C:
+				break;
+			}
+		}
+
 		public void SetBlendRatio(int index, float ratio)
 		{
 			_blendRatio [index] = ratio;
@@ -138,11 +168,11 @@ namespace Isv
 
 			_movieTexA = new MovieTexture ();
 			_movieTexA.FrameAvailable += OnFrameAvailable;
-			_movieTexA.Play ("/sdcard/Movies/mtv.mp4");
+			//_movieTexA.Play ("/sdcard/Movies/mtv.mp4");
 
 			_movieTexB = new MovieTexture ();
 			_movieTexB.FrameAvailable += OnFrameAvailable;
-			_movieTexB.Play ("/sdcard/Movies/Mayday2012b.mp4");
+			//_movieTexB.Play ("/sdcard/Movies/Mayday2012b.mp4");
 			//_movieTexB.Play ("/sdcard/Movies/mtv.mp4");
 
 			_movieTexC = new CameraTexture ();

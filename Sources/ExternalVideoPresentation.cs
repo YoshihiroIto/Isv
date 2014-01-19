@@ -13,7 +13,7 @@ namespace Isv
 {
 	internal class ExternalVideoPresentation : Presentation
 	{
-		private PaintingView _paintingView;
+		public PaintingView PaintingView{ get; private set; }
 
 		public ExternalVideoPresentation (Context outerContext, Display display) : base (outerContext, display)
 		{
@@ -25,12 +25,12 @@ namespace Isv
 
 			SetContentView (Resource.Layout.main);
 
-			_paintingView = FindViewById (Resource.Id.paintingview) as PaintingView;
+			PaintingView = FindViewById (Resource.Id.paintingview) as PaintingView;
 		}
 
 		public override bool OnTouchEvent (MotionEvent e)
 		{
-			_paintingView.OnTouchEvent (e);
+			PaintingView.OnTouchEvent (e);
 
 			return base.OnTouchEvent(e);
 		}

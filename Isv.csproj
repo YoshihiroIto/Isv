@@ -58,6 +58,7 @@
     <Compile Include="Sources\ShaderProgram\SimpleShaderProgram.cs" />
     <Compile Include="Sources\ShaderProgram\VideoBlendShaderProgram.cs" />
     <Compile Include="Sources\ExternalVideoPresentation.cs" />
+    <Compile Include="Sources\Types.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml">
@@ -75,6 +76,7 @@
     <AndroidResource Include="Resources\drawable-mdpi\icon.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\icon.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\icon.png" />
+    <AndroidResource Include="Resources\layout\ControlPanel.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

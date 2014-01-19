@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Threading;      
 using Android.App;
 using Android.Content;
 using Android.Graphics;
@@ -41,13 +43,27 @@ namespace Isv
 
         public void Play(string filePath)
         {
-			_mediaPlayer.Stop ();
+			Task.Factory.StartNew (() => {
+				if (_mediaPlayer.IsPlaying) {
+					_mediaPlayer.Stop ();
+					_mediaPlayer.Prepare ();
+				}
 
-			_mediaPlayer.SetDataSource (filePath);
-			_mediaPlayer.Looping = true;
+				_mediaPlayer.Reset ();
+				_mediaPlayer.SetDataSource (filePath);
+				_mediaPlayer.Looping = true;
 
-			_mediaPlayer.Prepare ();
-			_mediaPlayer.Start ();
+				_mediaPlayer.Prepare ();
+				_mediaPlayer.Start ();
+			});
+		}
+
+
+		public void SeekBegin()
+		{
+			Task.Factory.StartNew (() => {
+				_mediaPlayer.SeekTo (0);
+			});
 		}
 	}
 }

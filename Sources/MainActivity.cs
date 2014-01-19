@@ -1,4 +1,8 @@
 using System;
+using System.IO;
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 
 using Android.App;
 using Android.OS;
@@ -29,12 +33,14 @@ namespace Isv
 			RequestWindowFeature (WindowFeatures.NoTitle);
 			Window.AddFlags (WindowManagerFlags.Fullscreen);
 
-			#if !true
+			#if true
 
 			_mediaRouterCallback = new MediaRouterCallback (this);
 
-			// Get the MediaRouter service
 			_mediaRouter = (MediaRouter) GetSystemService (Android.Content.Context.MediaRouterService);
+
+			SetContentView (Resource.Layout.ControlPanel);
+			InitializeControl();
 
 			#else
 
@@ -134,6 +140,7 @@ namespace Isv
 				}
 			}
 		}
+
 		class MediaRouterCallback : MediaRouter.SimpleCallback
 		{
 			MainActivity main;
@@ -156,6 +163,68 @@ namespace Isv
 			public override void OnRoutePresentationDisplayChanged (MediaRouter router, MediaRouter.RouteInfo info)
 			{
 				main.UpdatePresentation ();
+			}
+		}
+
+		private ListView lvwChA;
+		private ListView lvwChB;
+		private Button btnSeekA;
+		private Button btnSeekB;
+
+		private Button btnBlendA;
+		private Button btnBlendB;
+		private Button btnBlendC;
+
+		private void InitializeControl()
+		{
+			lvwChA = FindViewById<ListView>(Resource.Id.lvwChA);
+			lvwChB = FindViewById<ListView>(Resource.Id.lvwChB);
+
+			lvwChA.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, Movies);
+			lvwChB.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, Movies);
+
+			btnSeekA = FindViewById<Button>(Resource.Id.btnSeekA);
+			btnSeekB = FindViewById<Button>(Resource.Id.btnSeekB);
+
+			//
+			btnSeekA.Tag = (int)Channel.A;
+			btnSeekB.Tag = (int)Channel.B;		
+			btnSeekA.Click += OnSeekClick;
+			btnSeekB.Click += OnSeekClick;
+
+			//		
+			lvwChA.Tag = (int)Channel.A;
+			lvwChB.Tag = (int)Channel.B;
+			lvwChA.ItemClick += OnMovieItemChanged;
+			lvwChB.ItemClick += OnMovieItemChanged;
+		}
+
+		private void OnSeekClick(object sender, EventArgs e)
+		{
+			var button = sender as Button;
+
+			_presentation.PaintingView.SeekBegin ((Channel)(int)button.Tag);
+		}
+
+		private void OnMovieItemChanged(object sender, AdapterView.ItemClickEventArgs e)
+		{
+			var listView = sender as ListView;
+
+			var filePath = Path.Combine (MovieDir, Movies [e.Id]);
+		                                                                                                                                                                              
+			_presentation.PaintingView.Play ((Channel)(int)listView.Tag, filePath);
+		}
+
+		private static string MovieDir = "/sdcard/Movies/";
+
+		private static string[] _movies = null;
+		private static string[] Movies
+		{
+			get {
+				if (_movies == null)
+					_movies = Directory.EnumerateFiles (MovieDir).Select (x => Path.GetFileName (x)).ToArray();
+
+				return _movies;
 			}
 		}
 	}
