@@ -212,6 +212,9 @@ namespace Isv
 
 		private void OnSeekClick(object sender, EventArgs e)
 		{
+			if (_presentation == null)
+				return;
+
 			var button = sender as Button;
 
 			_presentation.PaintingView.SeekBegin ((Channel)(int)button.Tag);
@@ -219,8 +222,10 @@ namespace Isv
 
 		private void OnMovieItemChanged(object sender, AdapterView.ItemClickEventArgs e)
 		{
-			var listView = sender as ListView;
+			if (_presentation == null)
+				return;
 
+			var listView = sender as ListView;
 			var filePath = Path.Combine (MovieDir, Movies [e.Id]);
 		                                                                                                                                                                              
 			_presentation.PaintingView.Play ((Channel)(int)listView.Tag, filePath);
@@ -228,6 +233,9 @@ namespace Isv
 
 		private void OnBlendChanged(object sender, EventArgs e)
         {
+			if (_presentation == null)
+				return;
+
 			var button = sender as ToggleButton;
 
 			_presentation.PaintingView.StartBlend ((Channel)(int)button.Tag, button.Checked);

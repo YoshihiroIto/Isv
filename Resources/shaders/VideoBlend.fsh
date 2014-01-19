@@ -11,8 +11,9 @@ uniform samplerExternalOES texC;
 
 uniform vec3 blendRatio;
 
+uniform vec2 cameraInvSize;
+
 const vec3 monochromeScale = vec3(0.298912, 0.586611, 0.114478);
-const vec2 frag = vec2(1.0 / 1920.0, 1.0 / 1080.0);
 const float thresold = 0.85;
 
 void main()            
@@ -26,15 +27,15 @@ void main()
 
     outputColor.a = 1.0;
 
-    vec3 c00 = texture2D(texC, texcoordC + (vec2(-1.0, -1.0) * frag)).rgb;
-    vec3 c01 = texture2D(texC, texcoordC + (vec2( 0.0, -1.0) * frag)).rgb;
-    vec3 c02 = texture2D(texC, texcoordC + (vec2( 1.0, -1.0) * frag)).rgb;
-    vec3 c10 = texture2D(texC, texcoordC + (vec2(-1.0,  0.0) * frag)).rgb;
-    vec3 c11 = texture2D(texC, texcoordC + (vec2( 0.0,  0.0) * frag)).rgb;
-    vec3 c12 = texture2D(texC, texcoordC + (vec2( 1.0,  0.0) * frag)).rgb;
-    vec3 c20 = texture2D(texC, texcoordC + (vec2(-1.0,  1.0) * frag)).rgb;
-    vec3 c21 = texture2D(texC, texcoordC + (vec2( 0.0,  1.0) * frag)).rgb;
-    vec3 c22 = texture2D(texC, texcoordC + (vec2( 1.0,  1.0) * frag)).rgb;
+    vec3 c00 = texture2D(texC, texcoordC + (vec2(-1.0, -1.0) * cameraInvSize)).rgb;
+    vec3 c01 = texture2D(texC, texcoordC + (vec2( 0.0, -1.0) * cameraInvSize)).rgb;
+    vec3 c02 = texture2D(texC, texcoordC + (vec2( 1.0, -1.0) * cameraInvSize)).rgb;
+    vec3 c10 = texture2D(texC, texcoordC + (vec2(-1.0,  0.0) * cameraInvSize)).rgb;
+    vec3 c11 = texture2D(texC, texcoordC + (vec2( 0.0,  0.0) * cameraInvSize)).rgb;
+    vec3 c12 = texture2D(texC, texcoordC + (vec2( 1.0,  0.0) * cameraInvSize)).rgb;
+    vec3 c20 = texture2D(texC, texcoordC + (vec2(-1.0,  1.0) * cameraInvSize)).rgb;
+    vec3 c21 = texture2D(texC, texcoordC + (vec2( 0.0,  1.0) * cameraInvSize)).rgb;
+    vec3 c22 = texture2D(texC, texcoordC + (vec2( 1.0,  1.0) * cameraInvSize)).rgb;
 
     vec3 horizonColor  = c00 * +1.0;
     horizonColor      += c01 * +0.0;

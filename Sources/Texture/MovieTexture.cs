@@ -44,6 +44,7 @@ namespace Isv
         public void Play(string filePath)
         {
 			Task.Factory.StartNew (() => {
+
 				if (_mediaPlayer.IsPlaying) {
 					_mediaPlayer.Stop ();
 					_mediaPlayer.Prepare ();

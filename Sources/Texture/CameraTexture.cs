@@ -24,6 +24,20 @@ namespace Isv
 		private float _previewWidth = 1.0f;
 		private float _previewHeight = 1.0f;
 
+		//private readonly float[] _cameraSize = { 800, 600 };
+		//private readonly float[] _cameraInvSize = { 1.0f / 800.0f, 1.0f / 600.0f };
+
+		private readonly float[] _cameraSize = { 1920.0f, 1080.0f };
+		private readonly float[] _cameraInvSize = { 1.0f / 1920.0f, 1.0f / 1080.0f };
+
+		public float[] CameraInvSize
+		{
+			get {
+				return _cameraInvSize;
+			}
+
+		}
+
 		public CameraTexture ()
 		{
 			_camera = Android.Hardware.Camera.Open ();
@@ -37,15 +51,13 @@ namespace Isv
 			// オートフォーカス
 			param.FocusMode = Android.Hardware.Camera.Parameters.FocusModeContinuousVideo;
 
-			#if false
 			// サイズ
 			{
-				var a = param.SupportedPictureSizes.ToList();
-				var b = param.SupportedPreviewSizes.ToList();
+				//var a = param.SupportedPictureSizes.ToList();
+				//var b = param.SupportedPreviewSizes.ToList();
 
-				param.SetPreviewSize (176, 144);
+				param.SetPreviewSize ((int)_cameraSize[0], (int)_cameraSize[1]);
 			}
-			#endif
 
 			_previewWidth = param.PreviewSize.Width;
 			_previewHeight = param.PreviewSize.Height;

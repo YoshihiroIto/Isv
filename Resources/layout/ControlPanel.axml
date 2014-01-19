@@ -7,17 +7,17 @@
         android:orientation="vertical"
         android:minWidth="25px"
         android:minHeight="25px"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:id="@+id/linearLayout1">
+        android:id="@+id/linearLayout1"
+        android:layout_weight="3">
         <ListView
             android:minWidth="25px"
             android:minHeight="25px"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/lvwChA" />
+            android:id="@+id/lvwChA"
+            android:layout_weight="1" />
         <Button
             android:id="@+id/btnSeekA"
             android:text="ch A"
@@ -28,10 +28,10 @@
         android:orientation="vertical"
         android:minWidth="25px"
         android:minHeight="25px"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:id="@+id/linearLayout2">
+        android:id="@+id/linearLayout2"
+        android:layout_weight="3">
         <ListView
             android:minWidth="25px"
             android:minHeight="25px"
@@ -49,10 +49,10 @@
         android:orientation="vertical"
         android:minWidth="25px"
         android:minHeight="25px"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0"
-        android:id="@+id/linearLayout3">
+        android:id="@+id/linearLayout3"
+        android:layout_weight="2">
         <LinearLayout
             android:orientation="horizontal"
             android:minWidth="25px"
@@ -61,17 +61,17 @@
             android:layout_height="wrap_content"
             android:id="@+id/linearLayout4">
             <ToggleButton
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/btnBlendA" />
             <ToggleButton
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/btnBlendB" />
             <ToggleButton
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/btnBlendC" />
