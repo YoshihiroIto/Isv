@@ -1,11 +1,9 @@
-#version 300 es
+#version 140
 #extension GL_OES_EGL_image_external : require
 
-in vec2 texcoordA;
-in vec2 texcoordB;
-in vec2 texcoordC;
-
-out mediump vec4 outFragColor;
+varying vec2 texcoordA;
+varying vec2 texcoordB;
+varying vec2 texcoordC;
 
 uniform samplerExternalOES texA;
 uniform samplerExternalOES texB;
@@ -22,21 +20,21 @@ void main()
     vec4 outputColor;
 
     outputColor.rgb =
-        (texture(texA, texcoordA).rgb * blendRatio.x) +
-        (texture(texB, texcoordB).rgb * blendRatio.y) +
-        (texture(texC, texcoordC).rgb * blendRatio.z);
+        (texture2D(texA, texcoordA).rgb * blendRatio.x) +
+        (texture2D(texB, texcoordB).rgb * blendRatio.y) +
+        (texture2D(texC, texcoordC).rgb * blendRatio.z);
 
     outputColor.a = 1.0;
 
-    vec3 c00 = texture(texC, texcoordC + (vec2(-1.0, -1.0) * frag)).rgb;
-    vec3 c01 = texture(texC, texcoordC + (vec2( 0.0, -1.0) * frag)).rgb;
-    vec3 c02 = texture(texC, texcoordC + (vec2( 1.0, -1.0) * frag)).rgb;
-    vec3 c10 = texture(texC, texcoordC + (vec2(-1.0,  0.0) * frag)).rgb;
-    vec3 c11 = texture(texC, texcoordC + (vec2( 0.0,  0.0) * frag)).rgb;
-    vec3 c12 = texture(texC, texcoordC + (vec2( 1.0,  0.0) * frag)).rgb;
-    vec3 c20 = texture(texC, texcoordC + (vec2(-1.0,  1.0) * frag)).rgb;
-    vec3 c21 = texture(texC, texcoordC + (vec2( 0.0,  1.0) * frag)).rgb;
-    vec3 c22 = texture(texC, texcoordC + (vec2( 1.0,  1.0) * frag)).rgb;
+    vec3 c00 = texture2D(texC, texcoordC + (vec2(-1.0, -1.0) * frag)).rgb;
+    vec3 c01 = texture2D(texC, texcoordC + (vec2( 0.0, -1.0) * frag)).rgb;
+    vec3 c02 = texture2D(texC, texcoordC + (vec2( 1.0, -1.0) * frag)).rgb;
+    vec3 c10 = texture2D(texC, texcoordC + (vec2(-1.0,  0.0) * frag)).rgb;
+    vec3 c11 = texture2D(texC, texcoordC + (vec2( 0.0,  0.0) * frag)).rgb;
+    vec3 c12 = texture2D(texC, texcoordC + (vec2( 1.0,  0.0) * frag)).rgb;
+    vec3 c20 = texture2D(texC, texcoordC + (vec2(-1.0,  1.0) * frag)).rgb;
+    vec3 c21 = texture2D(texC, texcoordC + (vec2( 0.0,  1.0) * frag)).rgb;
+    vec3 c22 = texture2D(texC, texcoordC + (vec2( 1.0,  1.0) * frag)).rgb;
 
     vec3 horizonColor  = c00 * +1.0;
     horizonColor      += c01 * +0.0;
@@ -65,5 +63,5 @@ void main()
     outputColor.rgb += vec3(gray, gray, gray);
 
     //
-    outFragColor = outputColor;
+    gl_FragColor = outputColor;
 }

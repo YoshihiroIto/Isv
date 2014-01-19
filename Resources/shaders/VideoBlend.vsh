@@ -1,11 +1,11 @@
-#version 300 es
+#version 140
 
-in vec4 inPosition;
-in vec2 inTexcoord;
+attribute vec4 inPosition;
+attribute vec2 inTexcoord;
 
-out vec2 texcoordA;
-out vec2 texcoordB;
-out vec2 texcoordC;
+varying vec2 texcoordA;
+varying vec2 texcoordB;
+varying vec2 texcoordC;
 
 uniform mat4 texTransformA;
 uniform mat4 texTransformB;
