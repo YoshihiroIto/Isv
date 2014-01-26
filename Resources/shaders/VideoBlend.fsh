@@ -9,7 +9,7 @@ uniform samplerExternalOES texA;
 uniform samplerExternalOES texB;
 uniform samplerExternalOES texC;
 
-uniform vec3 blendRatio;
+uniform vec4 blendRatio;
 
 uniform vec2 cameraInvSize;
 
@@ -61,6 +61,7 @@ void main()
     float gray = dot(destColor, monochromeScale);
     gray -= 1.0 - thresold;
     gray /= thresold;
+    gray *= blendRatio.w;
     outputColor.rgb += vec3(gray, gray, gray);
 
     //

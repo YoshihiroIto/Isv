@@ -31,7 +31,7 @@ namespace Isv
 		private bool _frameAvailableTexB;
 		private bool _frameAvailableTexC;
 
-		private readonly float[] _blendRatio = new [] {1.0f, 1.0f, 1.0f};
+		private readonly float[] _blendRatio = new [] {1.0f, 1.0f, 1.0f, 1.0f};
 		private readonly bool[] _blendDir = new [] {false, false, false};
 
 		public PaintingView (Context context, IAttributeSet attrs) :
@@ -256,8 +256,6 @@ namespace Isv
 
 				_blendRatio [i] += _blendDir[i] ? 0.3f : -0.3f;
 				_blendRatio [i] = Math.Min(1.0f, Math.Max(0.0f, _blendRatio [i]));
-
-				//_blendRatio [i] = 1.0f;
 			}
 
 			GL.UniformMatrix4 (_videoBlend.UniformTexTransformA, 1, false, _movieTexA.Transform);
@@ -266,7 +264,7 @@ namespace Isv
 			GL.Uniform1 (_videoBlend.UniformTexA, 0);
 			GL.Uniform1 (_videoBlend.UniformTexB, 1);
 			GL.Uniform1 (_videoBlend.UniformTexC, 2);
-			GL.Uniform3 (_videoBlend.UniformBlendRatio, 1, _blendRatio);
+			GL.Uniform4 (_videoBlend.UniformBlendRatio, 1, _blendRatio);
 			GL.Uniform2 (_videoBlend.UniformCameraInvSize, 1, _movieTexC.CameraInvSize);
 
 			RenderQuad ();
