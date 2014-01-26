@@ -15,7 +15,7 @@ void main()
 {         
 	gl_Position = inPosition;
 
-	texcoordA = (texTransformA * vec4(inTexcoord.x, inTexcoord.y, 0.0, 1.0)).xy;
-	texcoordB = (texTransformB * vec4(inTexcoord.x, inTexcoord.y, 0.0, 1.0)).xy;
+	texcoordA = (texTransformA * vec4(inTexcoord.x, inTexcoord.y, 0.0, 1.0)).xy; 
+	texcoordB = (texTransformB * vec4(inTexcoord.x, inTexcoord.y, 0.0, 1.0)).xy; 
 	texcoordC = (texTransformC * vec4(inTexcoord.x, inTexcoord.y, 0.0, 1.0)).xy;
 }

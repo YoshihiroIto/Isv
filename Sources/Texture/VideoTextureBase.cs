@@ -33,6 +33,9 @@ namespace Isv
 			get;
 		}
 
+		private float Scale { get; set; }
+		private float Rotate { get; set; }      // unit:degree
+
 		protected SurfaceTexture SurfaceTexture {
 			get;
 			private set;
@@ -41,14 +44,17 @@ namespace Isv
 		public VideoTextureBase()
 		{
 			Transform = new float[16];
+			//Scale = 1.0f;
+			//Rotate = 0.0f;
+			Scale = 3.0f;
+			Rotate = 45.0f;
 
 			GL.GenTextures (_textures.Length, _textures);
 
 			GL.BindTexture ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, TextureName);
-			GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureMinFilter, (int)All.Nearest);
-			GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureMagFilter, (int)All.Nearest);
-			//GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureWrapS, (int)All.Repeat);
-			//GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureWrapT, (int)All.Repeat);
+
+			GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureMinFilter, (int)All.Linear);
+			GL.TexParameter ((All)Android.Opengl.GLES11Ext.GlTextureExternalOes, All.TextureMagFilter, (int)All.Linear);
 
 			SurfaceTexture = new SurfaceTexture (TextureName);
 			SurfaceTexture.SetOnFrameAvailableListener (this);
@@ -62,6 +68,9 @@ namespace Isv
 		public virtual void OnFrameAvailable (SurfaceTexture surfaceTexture)
 		{
 			SurfaceTexture.GetTransformMatrix (Transform);
+
+			Android.Opengl.Matrix.ScaleM (Transform, 0, Scale, Scale, 1.0f);
+			Android.Opengl.Matrix.RotateM (Transform, 0, Rotate, 0.0f, 0.0f, 1.0f);
 
 			if (FrameAvailable != null)
 				FrameAvailable (this, EventArgs.Empty);

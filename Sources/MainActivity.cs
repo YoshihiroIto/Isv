@@ -33,7 +33,7 @@ namespace Isv
 			RequestWindowFeature (WindowFeatures.NoTitle);
 			Window.AddFlags (WindowManagerFlags.Fullscreen);
 
-			#if true
+			#if !true
 
 			_mediaRouterCallback = new MediaRouterCallback (this);
 
