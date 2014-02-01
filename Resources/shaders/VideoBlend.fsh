@@ -10,8 +10,8 @@ uniform samplerExternalOES texB;
 uniform samplerExternalOES texC;
 
 uniform vec4 blendRatio;
-
 uniform vec2 cameraInvSize;
+uniform float poster;
 
 const vec3 monochromeScale = vec3(0.298912, 0.586611, 0.114478);
 const float thresold = 0.85;
@@ -28,6 +28,12 @@ void main()
         (texture2D(texA, wrappedTexA).rgb * blendRatio.x) +
         (texture2D(texB, wrappedTexB).rgb * blendRatio.y) +
         (texture2D(texC, wrappedTexC).rgb * blendRatio.z);
+
+    float invPoster = 1.0 / poster;
+
+    outputColor.r = min(1.0, floor((outputColor.r + invPoster * 0.5) * poster) * invPoster);
+    outputColor.g = min(1.0, floor((outputColor.g + invPoster * 0.5) * poster) * invPoster);
+    outputColor.b = min(1.0, floor((outputColor.b + invPoster * 0.5) * poster) * invPoster);
 
     outputColor.a = 1.0;
 

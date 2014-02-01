@@ -56,6 +56,11 @@ namespace Isv
 			private set;
 		}
 
+		public int UniformPoster {
+			get;
+			private set;
+		}
+
 		public VideoBlendShaderProgram (AssetManager assetMan)
 			: base (assetMan, "Resources/shaders/VideoBlend.vsh", "Resources/shaders/VideoBlend.fsh")
 		{
@@ -67,6 +72,7 @@ namespace Isv
 			UniformTexC = GL.GetUniformLocation (Program, new StringBuilder ("texC"));
 			UniformBlendRatio = GL.GetUniformLocation (Program, new StringBuilder ("blendRatio"));
 			UniformCameraInvSize = GL.GetUniformLocation (Program, new StringBuilder ("cameraInvSize"));
+			UniformPoster = GL.GetUniformLocation (Program, new StringBuilder ("poster"));
 		}
 	}
 }

@@ -272,7 +272,9 @@ namespace Isv
 			_uniformBlendRatio [1] = _blendRatio [(int)Channel.B];
 			_uniformBlendRatio [2] = _blendRatio [(int)Channel.C];
 			_uniformBlendRatio [3] = _blendRatio [(int)Channel.F];
-	
+
+			var poster = _blendRatio [(int)Channel.D] * 256.0f + 4.0f;
+
 			GL.UniformMatrix4 (_videoBlend.UniformTexTransformA, 1, false, _movieTexA.Transform);
 			GL.UniformMatrix4 (_videoBlend.UniformTexTransformB, 1, false, _movieTexB.Transform);
 			GL.UniformMatrix4 (_videoBlend.UniformTexTransformC, 1, false, _movieTexC.Transform);
@@ -281,6 +283,7 @@ namespace Isv
 			GL.Uniform1 (_videoBlend.UniformTexC, 2);
 			GL.Uniform4 (_videoBlend.UniformBlendRatio, 1, _uniformBlendRatio);
 			GL.Uniform2 (_videoBlend.UniformCameraInvSize, 1, _movieTexC.CameraInvSize);
+			GL.Uniform1 (_videoBlend.UniformPoster, poster);
 
 			RenderQuad ();
 		}
