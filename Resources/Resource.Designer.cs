@@ -72,11 +72,47 @@ namespace Isv
 			// aapt resource value: 0x7f05000a
 			public const int btnBlendC = 2131034122;
 			
+			// aapt resource value: 0x7f05000c
+			public const int btnBlendD = 2131034124;
+			
+			// aapt resource value: 0x7f05000d
+			public const int btnBlendE = 2131034125;
+			
+			// aapt resource value: 0x7f05000e
+			public const int btnBlendF = 2131034126;
+			
+			// aapt resource value: 0x7f050011
+			public const int btnRotate0 = 2131034129;
+			
+			// aapt resource value: 0x7f050016
+			public const int btnRotate45m = 2131034134;
+			
+			// aapt resource value: 0x7f050014
+			public const int btnRotate45p = 2131034132;
+			
+			// aapt resource value: 0x7f050018
+			public const int btnRotateM = 2131034136;
+			
+			// aapt resource value: 0x7f050017
+			public const int btnScale05 = 2131034135;
+			
+			// aapt resource value: 0x7f050010
+			public const int btnScale10 = 2131034128;
+			
+			// aapt resource value: 0x7f050013
+			public const int btnScale20 = 2131034131;
+			
+			// aapt resource value: 0x7f050015
+			public const int btnScale30 = 2131034133;
+			
 			// aapt resource value: 0x7f050002
 			public const int btnSeekA = 2131034114;
 			
 			// aapt resource value: 0x7f050005
 			public const int btnSeekB = 2131034117;
+			
+			// aapt resource value: 0x7f050012
+			public const int linearLayout = 2131034130;
 			
 			// aapt resource value: 0x7f050000
 			public const int linearLayout1 = 2131034112;
@@ -90,14 +126,20 @@ namespace Isv
 			// aapt resource value: 0x7f050007
 			public const int linearLayout4 = 2131034119;
 			
+			// aapt resource value: 0x7f05000b
+			public const int linearLayout5 = 2131034123;
+			
+			// aapt resource value: 0x7f05000f
+			public const int linearLayout6 = 2131034127;
+			
 			// aapt resource value: 0x7f050001
 			public const int lvwChA = 2131034113;
 			
 			// aapt resource value: 0x7f050004
 			public const int lvwChB = 2131034116;
 			
-			// aapt resource value: 0x7f05000b
-			public const int paintingview = 2131034123;
+			// aapt resource value: 0x7f050019
+			public const int paintingview = 2131034137;
 			
 			static Id()
 			{

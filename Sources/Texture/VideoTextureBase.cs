@@ -33,8 +33,8 @@ namespace Isv
 			get;
 		}
 
-		private float Scale { get; set; }
-		private float Rotate { get; set; }      // unit:degree
+		public float Scale { get; set; }
+		public float Rotate { get; set; }      // unit:degree
 
 		protected SurfaceTexture SurfaceTexture {
 			get;
@@ -44,10 +44,8 @@ namespace Isv
 		public VideoTextureBase()
 		{
 			Transform = new float[16];
-			//Scale = 1.0f;
-			//Rotate = 0.0f;
-			Scale = 3.0f;
-			Rotate = 45.0f;
+			Scale = 1.0f;
+			Rotate = 0.0f;
 
 			GL.GenTextures (_textures.Length, _textures);
 

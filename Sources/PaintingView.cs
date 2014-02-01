@@ -31,8 +31,29 @@ namespace Isv
 		private bool _frameAvailableTexB;
 		private bool _frameAvailableTexC;
 
-		private readonly float[] _blendRatio = new [] {1.0f, 1.0f, 1.0f, 1.0f};
-		private readonly bool[] _blendDir = new [] {false, false, false};
+		private readonly float[] _blendRatio = new [] {1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f};
+		private readonly bool[] _blendDir = new [] {false, false, false, false, false, false};
+
+		private readonly float[] _uniformBlendRatio = new float [4];
+
+
+		public float Scale
+		{
+			set {
+				_movieTexA.Scale = value;
+				_movieTexB.Scale = value;
+				_movieTexC.Scale = value;
+			}
+		}
+
+		public float Rotate
+		{
+			set {
+				_movieTexA.Rotate = value;
+				_movieTexB.Rotate = value;
+				_movieTexC.Rotate = value;
+			}
+		}
 
 		public PaintingView (Context context, IAttributeSet attrs) :
 			base (context, attrs)
@@ -56,8 +77,6 @@ namespace Isv
 			case Channel.B:
 				_movieTexB.SeekBegin ();
 				break;
-			case Channel.C:
-				break;
 			}
 		}
 
@@ -71,17 +90,12 @@ namespace Isv
 			case Channel.B:
 				_movieTexB.Play (filePath);
 				break;
-			case Channel.C:
-				break;
 			}
 		}
-
-		private Channel blendUpChannel;
 
 		public void StartBlend(Channel channel, bool isUp)
 		{
 			_blendDir [(int)channel] = isUp;
-			blendUpChannel = channel;
 		}
 
 		public void SetBlendRatio(int index, float ratio)
@@ -179,12 +193,9 @@ namespace Isv
 
 			_movieTexA = new MovieTexture ();
 			_movieTexA.FrameAvailable += OnFrameAvailable;
-			//_movieTexA.Play ("/sdcard/Movies/motion01.m4v");
 
 			_movieTexB = new MovieTexture ();
 			_movieTexB.FrameAvailable += OnFrameAvailable;
-			//_movieTexB.Play ("/sdcard/Movies/Mayday2012b.mp4");
-			//_movieTexB.Play ("/sdcard/Movies/motion02.m4v");
 
 			_movieTexC = new CameraTexture ();
 			_movieTexC.FrameAvailable += OnFrameAvailable;
@@ -252,19 +263,23 @@ namespace Isv
 				_frameAvailableTexC = false;
 			}
 
-			for (var i = 0; i != 3; ++i) {
-
-				_blendRatio [i] += _blendDir[i] ? 0.3f : -0.3f;
-				_blendRatio [i] = Math.Min(1.0f, Math.Max(0.0f, _blendRatio [i]));
+			for (var i = 0; i != _blendDir.Length; ++i) {
+				_blendRatio [i] += _blendDir [i] ? 0.3f : -0.3f;
+				_blendRatio [i] = Math.Max (0.0f, Math.Min (1.0f, _blendRatio [i]));
 			}
 
+			_uniformBlendRatio [0] = _blendRatio [(int)Channel.A];
+			_uniformBlendRatio [1] = _blendRatio [(int)Channel.B];
+			_uniformBlendRatio [2] = _blendRatio [(int)Channel.C];
+			_uniformBlendRatio [3] = _blendRatio [(int)Channel.F];
+	
 			GL.UniformMatrix4 (_videoBlend.UniformTexTransformA, 1, false, _movieTexA.Transform);
 			GL.UniformMatrix4 (_videoBlend.UniformTexTransformB, 1, false, _movieTexB.Transform);
 			GL.UniformMatrix4 (_videoBlend.UniformTexTransformC, 1, false, _movieTexC.Transform);
 			GL.Uniform1 (_videoBlend.UniformTexA, 0);
 			GL.Uniform1 (_videoBlend.UniformTexB, 1);
 			GL.Uniform1 (_videoBlend.UniformTexC, 2);
-			GL.Uniform4 (_videoBlend.UniformBlendRatio, 1, _blendRatio);
+			GL.Uniform4 (_videoBlend.UniformBlendRatio, 1, _uniformBlendRatio);
 			GL.Uniform2 (_videoBlend.UniformCameraInvSize, 1, _movieTexC.CameraInvSize);
 
 			RenderQuad ();
